@@ -44,10 +44,11 @@ class Stats:
         """
         self.numbers = numbers
         self.counter = counter
+        self.less_counter = self._calculate_less_counter()
 
     def less(self, number: int) -> int:
         """
-        Calcuates the count of numbers less than "number" and returns the count.
+        Returns the count of numbers less than "number" and returns the count.
 
         Parameters:
             number (int): The threshold value.
@@ -55,7 +56,7 @@ class Stats:
         Returns:
             int: The count of numbers less than "number".
         """
-        return sum(self.counter[num] for num in self.counter if num < number)
+        return self.less_counter.get(number, 0)
 
     def between(self, min_number: int, max_number: int) -> int:
         """
@@ -83,3 +84,20 @@ class Stats:
             int: The count of numbers greater than "number".
         """
         return sum(self.counter[num] for num in self.counter if num > number)
+
+    def _calculate_less_counter(self) -> Dict[int, int]:
+        """
+        Calculates the cumulative count of numbers less than each threshold.
+
+        Returns:
+            Dict[int, int]: A dictionary mapping each number to the cumulative count of numbers less than it.
+        """
+        less_counter = {}
+        cumulative_count = 0
+        # Iterate through sorted numbers (self.counter keys) in ascending order
+        for num in sorted(self.counter):
+            # Update less_counter[num] with the current cumulative_count
+            less_counter[num] = cumulative_count
+            # Increment cumulative_count by the count of the current number
+            cumulative_count += self.counter[num]
+        return less_counter
