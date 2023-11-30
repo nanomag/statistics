@@ -118,7 +118,7 @@ class Stats:
         between_counter = {}
         cumulative_count = 0
 
-        # Iterate through sorted numbers
+        # Iterate through sorted numbers (self.counter keys) in ascending order
         for num in sorted(self.counter):
             # Increment cumulative_count by the count of the current number
             cumulative_count += self.counter[num]
