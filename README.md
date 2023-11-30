@@ -1,8 +1,10 @@
 # Statistics
 
-## Install packages
+## Setup and install packages
 
-- Execute `pip install -r requirements.txt`
+- Create virtual env: `python3 -m venv venv`
+- Activate virtual env: `source venv/bin/activate`
+- Install packages `pip install -r requirements.txt`
 
 ## How to run the app
 
