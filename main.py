@@ -45,6 +45,7 @@ class Stats:
         self.numbers = numbers
         self.counter = counter
         self.less_counter = self._calculate_less_counter()
+        self.between_counter = self._calculate_between_counter()
         self.greater_counter = self._calculate_greater_counter()
 
     def less(self, number: int) -> int:
@@ -104,6 +105,25 @@ class Stats:
             cumulative_count += self.counter[num]
 
         return less_counter
+
+    def _calculate_between_counter(self) -> Dict[int, int]:
+        """
+        Calculates the cumulative count of numbers between each pair of thresholds.
+
+        Returns:
+            Dict[int, int]: A dictionary mapping each number to the cumulative count of numbers up to it.
+        """
+        between_counter = {}
+        cumulative_count = 0
+
+        # Iterate through sorted numbers
+        for num in sorted(self.counter):
+            # Increment cumulative_count by the count of the current number
+            cumulative_count += self.counter[num]
+            # Update between_counter[num] with the current cumulative_count
+            between_counter[num] = cumulative_count
+
+        return between_counter
 
     def _calculate_greater_counter(self) -> Dict[int, int]:
         """
