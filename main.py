@@ -71,8 +71,10 @@ class Stats:
         Returns:
             int: The count of numbers between min_number (inclusive) and max_number (inclusive).
         """
-        return sum(
-            self.counter[num] for num in self.counter if min_number <= num <= max_number
+        return (
+            self.between_counter.get(max_number, 0)
+            - self.between_counter.get(min_number, 0)
+            + self.counter.get(min_number, 0)
         )
 
     def greater(self, number: int) -> int:
