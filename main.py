@@ -102,19 +102,22 @@ class Stats:
             between_counter, and greater_counter.
         """
         less_counter, between_counter, greater_counter = {}, {}, {}
-        cumulative_less, cumulative_greater = 0, 0
+        cumulative_less, cumulative_greater, cumulative_between = 0, 0, 0
 
         # Iterate through sorted numbers
         for num in sorted(self.counter):
             # Calculate cumulative count for less_counter
-            cumulative_less += self.counter[num]
             less_counter[num] = cumulative_less
 
             # Calculate cumulative count for greater_counter
-            cumulative_greater += self.counter[num]
             greater_counter[num] = cumulative_greater
 
             # Calculate cumulative count for between_counter
-            between_counter[num] = cumulative_less
+            cumulative_between += self.counter[num]
+            between_counter[num] = cumulative_between
+
+            # Update cumulative counters
+            cumulative_less += self.counter[num]
+            cumulative_greater += self.counter[num]
 
         return less_counter, between_counter, greater_counter
