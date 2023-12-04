@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 
 class DataCapture:
@@ -44,9 +44,11 @@ class Stats:
         """
         self.numbers = numbers
         self.counter = counter
-        self.less_counter = self._calculate_less_counter()
-        self.between_counter = self._calculate_between_counter()
-        self.greater_counter = self._calculate_greater_counter()
+        (
+            self.less_counter,
+            self.between_counter,
+            self.greater_counter,
+        ) = self._calculate_counters()
 
     def less(self, number: int) -> int:
         """
@@ -89,59 +91,30 @@ class Stats:
         """
         return self.greater_counter.get(number, 0)
 
-    def _calculate_less_counter(self) -> Dict[int, int]:
+    def _calculate_counters(
+        self
+    ) -> Tuple[Dict[int, int], Dict[int, int], Dict[int, int]]:
         """
-        Calculates the cumulative count of numbers less than each threshold.
+        Calculates cumulative counters for less, between, and greater.
 
         Returns:
-            Dict[int, int]: A dictionary mapping each number to the cumulative count of numbers less than it.
+            Tuple[Dict[int, int], Dict[int, int], Dict[int, int]]: A tuple containing less_counter,
+            between_counter, and greater_counter.
         """
-        less_counter = {}
-        cumulative_count = 0
+        less_counter, between_counter, greater_counter = {}, {}, {}
+        cumulative_less, cumulative_greater = 0, 0
 
-        # Iterate through sorted numbers (self.counter keys) in ascending order
+        # Iterate through sorted numbers
         for num in sorted(self.counter):
-            # Update less_counter[num] with the current cumulative_count
-            less_counter[num] = cumulative_count
-            # Increment cumulative_count by the count of the current number
-            cumulative_count += self.counter[num]
+            # Calculate cumulative count for less_counter
+            cumulative_less += self.counter[num]
+            less_counter[num] = cumulative_less
 
-        return less_counter
+            # Calculate cumulative count for greater_counter
+            cumulative_greater += self.counter[num]
+            greater_counter[num] = cumulative_greater
 
-    def _calculate_between_counter(self) -> Dict[int, int]:
-        """
-        Calculates the cumulative count of numbers between each pair of thresholds.
+            # Calculate cumulative count for between_counter
+            between_counter[num] = cumulative_less
 
-        Returns:
-            Dict[int, int]: A dictionary mapping each number to the cumulative count of numbers up to it.
-        """
-        between_counter = {}
-        cumulative_count = 0
-
-        # Iterate through sorted numbers (self.counter keys) in ascending order
-        for num in sorted(self.counter):
-            # Increment cumulative_count by the count of the current number
-            cumulative_count += self.counter[num]
-            # Update between_counter[num] with the current cumulative_count
-            between_counter[num] = cumulative_count
-
-        return between_counter
-
-    def _calculate_greater_counter(self) -> Dict[int, int]:
-        """
-        Calculates the cumulative count of numbers greater than each threshold.
-
-        Returns:
-            Dict[int, int]: A dictionary mapping each number to the cumulative count of numbers greater than it.
-        """
-        greater_counter = {}
-        cumulative_count = sum(self.counter.values())
-
-        # Iterate through sorted numbers (self.counter keys) in reverse (descending) order
-        for num in sorted(self.counter, reverse=True):
-            # Decrement cumulative_count by the count of the current number
-            cumulative_count -= self.counter[num]
-            # Update greater_counter[num] with the current cumulative_count
-            greater_counter[num] = cumulative_count
-
-        return greater_counter
+        return less_counter, between_counter, greater_counter
