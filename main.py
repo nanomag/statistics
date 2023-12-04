@@ -20,8 +20,12 @@ class DataCapture:
         Parameters:
             number (int): The number to be added.
         """
-        self.numbers.append(number)
-        self.counter[number] = self.counter.get(number, 0) + 1
+        try:
+            num = int(number)
+            self.numbers.append(num)
+            self.counter[num] = self.counter.get(num, 0) + 1
+        except ValueError:
+            print(f"Invalid number: {number}")
 
     def build_stats(self) -> "Stats":
         """
