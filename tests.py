@@ -19,12 +19,37 @@ def test_capture_valid_string_numbers():
     assert len(capture.numbers) == 3
 
 
-def test_capture_invalid_string_value():
+def test_capture_negative_number():
     capture = DataCapture()
     capture.add(1)
     capture.add(2)
-    capture.add("wrong")
-    assert len(capture.numbers) == 2
+
+    with pytest.raises(
+        ValueError,
+        match="Invalid input: -1. Please enter a positive integer less than 1000.",
+    ):
+        capture.add(-1)
+
+
+def test_capture_large_number():
+    capture = DataCapture()
+    with pytest.raises(
+        ValueError,
+        match="Invalid input: 1500. Please enter a positive integer less than 1000.",
+    ):
+        capture.add(1500)
+
+
+def test_capture_invalid_string():
+    capture = DataCapture()
+    capture.add(1)
+    capture.add(2)
+
+    with pytest.raises(
+        ValueError,
+        match="Invalid input: wrong. Please enter a positive integer less than 1000.",
+    ):
+        capture.add("wrong")
 
 
 @pytest.fixture

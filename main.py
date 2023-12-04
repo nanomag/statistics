@@ -22,10 +22,22 @@ class DataCapture:
         """
         try:
             num = int(number)
-            self.numbers.append(num)
-            self.counter[num] = self.counter.get(num, 0) + 1
+            if 0 < num < 1000:
+                self.numbers.append(num)
+                self.counter[num] = self.counter.get(num, 0) + 1
+                return
+
+            raise ValueError(
+                f"Number {number} must be a positive integer less than 1000."
+            )
         except ValueError:
-            print(f"Invalid number: {number}")
+            raise ValueError(
+                f"Invalid input: {number}. Please enter a positive integer less than 1000."
+            )
+        except Exception as e:
+            raise Exception(
+                f"Something wrong happened. Input: {number}. Error detail: {e}"
+            )
 
     def build_stats(self) -> "Stats":
         """
